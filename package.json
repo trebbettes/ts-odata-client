@@ -1,6 +1,6 @@
 {
-  "name": "ts-odata-client",
-  "version": "2.0.0-dev.local",
+  "name": "tsrx-ts-odata-client",
+  "version": "1.0.0",
   "description": "OData TypeScript Client",
   "main": "/index.js",
   "types": "/index.d.ts",
