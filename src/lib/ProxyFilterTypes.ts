@@ -1,6 +1,7 @@
 import type { BooleanPredicateBuilder } from "./BooleanPredicateBuilder";
 import type { FilterAccessoryFunctions } from "./FilterAccessoryFunctions";
 import type { EntityProxy, PropertyProxy } from "./ProxyTypes";
+import { ODataType } from "./ODataType";
 
 export const resolveQuery = Symbol();
 export const createProxiedEntity = Symbol();
@@ -23,16 +24,16 @@ export type ProxyFilterMethods<T> =
 export type PredicateArgument<T> = T | PropertyProxy<T> | null | undefined;
 
 export interface EqualityProxyFieldPredicate<T> {
-    equals(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
-    notEquals(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
+    equals(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
+    notEquals(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
     in(value: ArrayLike<PredicateArgument<T>> | Iterable<PredicateArgument<T>>): BooleanPredicateBuilder<T>;
 }
 
 export interface InequalityProxyFieldPredicate<T> {
-    lessThan(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
-    lessThanOrEqualTo(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
-    greaterThan(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
-    greaterThanOrEqualTo(value: PredicateArgument<T>): BooleanPredicateBuilder<T>;
+    lessThan(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
+    lessThanOrEqualTo(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
+    greaterThan(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
+    greaterThanOrEqualTo(value: PredicateArgument<T>, type?: ODataType): BooleanPredicateBuilder<T>;
 }
 
 export interface BooleanProxyFieldPredicate extends EqualityProxyFieldPredicate<boolean> { }

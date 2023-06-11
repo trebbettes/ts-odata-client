@@ -3,7 +3,9 @@ import { Expression } from "./Expression";
 import { ExpressionOperator } from "./ExpressionOperator";
 import { FieldReference } from "./FieldReference";
 import { FilterAccessoryFunctions } from "./FilterAccessoryFunctions";
+import { Literal } from "./Literal";
 import { ODataQueryProvider } from "./ODataQueryProvider";
+import { ODataType } from "./ODataType";
 import { ArrayProxyFieldPredicateInterface, EqualityProxyFieldPredicate, InequalityProxyFieldPredicate, PredicateArgument, StringProxyFieldPredicateInterface, createProxiedEntity } from "./ProxyFilterTypes";
 import { EntityProxy, propertyPath, lambdaVariable, PropertyProxy } from "./ProxyTypes";
 
@@ -18,32 +20,32 @@ export class ProxyPropertyPredicate<T> implements
         this.fieldReference = this.getFieldReference(propertyProxy);
     }
 
-    equals(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.Equals);
+    equals(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.Equals, type);
     }
-
-    notEquals(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.NotEquals);
+    
+    notEquals(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.NotEquals, type);
     }
 
     in(value: ArrayLike<PredicateArgument<T>> | Iterable<PredicateArgument<T>>) {
         return this.buildPredicateBuilder(Array.from(value), ExpressionOperator.In);
     }
 
-    lessThan(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.LessThan);
+    lessThan(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.LessThan, type);
     }
 
-    lessThanOrEqualTo(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.LessThanOrEqualTo);
+    lessThanOrEqualTo(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.LessThanOrEqualTo, type);
     }
 
-    greaterThan(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.GreaterThan);
+    greaterThan(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.GreaterThan, type);
     }
 
-    greaterThanOrEqualTo(value: PredicateArgument<T>) {
-        return this.buildPredicateBuilder(value, ExpressionOperator.GreaterThanOrEqualTo);
+    greaterThanOrEqualTo(value: PredicateArgument<T>, type: ODataType | null = null) {
+        return this.buildPredicateBuilder(value, ExpressionOperator.GreaterThanOrEqualTo, type);
     }
 
     contains(value: PredicateArgument<string>) {
@@ -82,11 +84,14 @@ export class ProxyPropertyPredicate<T> implements
         return new BooleanPredicateBuilder<P>(expression);
     }
 
-    protected buildPredicateBuilder<P>(value: P | PropertyProxy<P>, operator: ExpressionOperator) {
+    protected buildPredicateBuilder<P>(value: P | PropertyProxy<P>, operator: ExpressionOperator, type: ODataType | null = null) {
         let operand: any = value;
         const propertyPaths = value == null ? null : (value as any)[propertyPath] as string[] | undefined;
         if (propertyPaths != null) {
             operand = this.getFieldReference(value as unknown as PropertyProxy<T>)
+        }
+        if (type != null) {
+            operand = new Literal(operand, type);
         }
         const expression = new Expression(operator, [this.fieldReference, operand]);
         return new BooleanPredicateBuilder<P>(expression);

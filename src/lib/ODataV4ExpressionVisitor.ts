@@ -195,6 +195,8 @@ export class ODataV4ExpressionVisitor extends TypedExpressionVisitor {
         const value = literal.value;
 
         switch (literal.literalType) {
+            case ODataType.DateTime:
+                return new Date(value).toISOString();
             case ODataType.Date:
                 return new Date(value).toISOString().substring(0, 10);
             case ODataType.Guid:
