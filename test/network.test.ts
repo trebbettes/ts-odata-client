@@ -23,7 +23,7 @@ xdescribe("executing getManyAsync", () => {
         let results = await query.getManyAsync();
 
         expect(results).to.not.be.undefined;
-        expect(results.value).to.not.be.undefined;
-        results.value.forEach(v => expect(v.Name).to.match(/vet/i));
+        expect(results.response.value).to.not.be.undefined;
+        results.response.value.forEach(v => expect(v.Name).to.match(/vet/i));
     });
 });

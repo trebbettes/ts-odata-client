@@ -42,7 +42,7 @@ describe("ODataQuery", () => {
         const query = baseQuery.select(u => ({ id: u.age, name: { first: u.firstName } }));
         const result = await query.getManyAsync();
 
-        expect(result).to.be.eql({ value: [{ id: undefined, name: { first: undefined } }] });
+        expect(result.response).to.be.eql({ value: [{ id: undefined, name: { first: undefined } }] });
     });
 });
 

@@ -1,7 +1,7 @@
 import { ODataQueryProvider } from "./ODataQueryProvider";
 import { FieldReference } from "./FieldReference";
 import { Expression } from "./Expression";
-import { ODataQueryResponse, ODataQueryResponseWithCount, ODataResponse } from "./ODataResponse";
+import { GetResult, GetManyResult, ODataQueryResponse, ODataQueryResponseWithCount, ODataResponse } from "./ODataResponse";
 import { BooleanPredicateBuilder } from "./BooleanPredicateBuilder";
 import { ExpressionOperator } from "./ExpressionOperator";
 import { SubType } from "./SubType";
@@ -129,11 +129,11 @@ export class ODataQuery<T, U = ExcludeProperties<T, any[]>> {
         // return await this.provider.executeQueryAsync<ODataResponse & ReplaceDateWithString<U>>(expression);
         const result = await this.provider.executeQueryAsync<ODataResponse & ReplaceDateWithString<U>>(expression);
         const selectMap = getSelectMap(expression);
-        if (selectMap == null) return result;
+        if (selectMap == null) return new GetResult(result);
 
         const newResult = selectMap(result) as unknown as ODataResponse & ReplaceDateWithString<U>;
         newResult["@odata.context"] = result["@odata.context"];
-        return newResult;
+        return new GetResult(newResult);
     }
 
     /**
@@ -145,7 +145,7 @@ export class ODataQuery<T, U = ExcludeProperties<T, any[]>> {
         if (selectMap != null) {
             results.value = results.value.map(selectMap) as unknown as ReplaceDateWithString<U>[];
         }
-        return results;
+        return new GetManyResult<T, ReplaceDateWithString<U>>(results);
     }
 
     /**
@@ -158,7 +158,7 @@ export class ODataQuery<T, U = ExcludeProperties<T, any[]>> {
         if (selectMap != null) {
             results.value = results.value.map(selectMap) as unknown as ReplaceDateWithString<U>[];
         }
-        return results;
+        return new GetManyResult<T, ReplaceDateWithString<U>>(results);
     }
 
     public async getValueAsync() {
