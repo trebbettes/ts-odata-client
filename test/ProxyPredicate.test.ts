@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ODataQuery } from "../src";
+import { ODataQuery, ODataType } from "../src";
 import { lambdaVariable } from "../src/lib/ProxyTypes";
 
 
@@ -49,15 +49,50 @@ describe("useProxy", () => {
         const query = baseQuery.filter((p, { and }) => and(p.firstName.$equals("jac"), p.age.$notEquals(50)));
         expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName eq 'jac' and age ne 50")}`);
     });
+    
+    it("should handle equals and notEquals guid types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$equals("0d61b622-25e8-449c-896e-3a4e13b70c95", ODataType.Guid), p.firstName.$notEquals("0d61b622-25e8-449c-896e-3a4e13b70c95", ODataType.Guid)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName eq 0d61b622-25e8-449c-896e-3a4e13b70c95 and firstName ne 0d61b622-25e8-449c-896e-3a4e13b70c95")}`);
+    });
+    
+    it("should handle equals and notEquals date types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$equals("1970-01-01", ODataType.Date), p.firstName.$notEquals("1970-01-01", ODataType.Date)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName eq 1970-01-01 and firstName ne 1970-01-01")}`);
+    });
+
+    it("should handle equals and notEquals datetime types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$equals("1970-01-01", ODataType.DateTime), p.firstName.$notEquals("1970-01-01", ODataType.DateTime)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName eq 1970-01-01T00:00:00.000Z and firstName ne 1970-01-01T00:00:00.000Z")}`);
+    });
 
     it("should handle greaterThan and greaterThanEqualTo", () => {
         const query = baseQuery.filter((p, { and }) => and(p.firstName.$greaterThan("jac"), p.age.$greaterThanOrEqualTo(50)));
         expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName gt 'jac' and age ge 50")}`);
     });
+    
+    it("should handle greaterThan and greaterThanEqualTo date types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$greaterThan("1970-01-01", ODataType.Date), p.firstName.$greaterThanOrEqualTo("1970-01-01", ODataType.Date)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName gt 1970-01-01 and firstName ge 1970-01-01")}`);
+    });
+
+    it("should handle greaterThan and greaterThanEqualTo datetime types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$greaterThan("1970-01-01", ODataType.DateTime), p.firstName.$greaterThanOrEqualTo("1970-01-01", ODataType.DateTime)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName gt 1970-01-01T00:00:00.000Z and firstName ge 1970-01-01T00:00:00.000Z")}`);
+    });
 
     it("should handle lessThan and lessThanEqualTo", () => {
         const query = baseQuery.filter((p, { and }) => and(p.firstName.$lessThan("jac"), p.age.$lessThanOrEqualTo(50)));
         expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName lt 'jac' and age le 50")}`);
+    });
+
+    it("should handle lessThan and lessThanEqualTo date types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$lessThan("1970-01-01", ODataType.Date), p.firstName.$lessThanOrEqualTo("1970-01-01", ODataType.Date)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName lt 1970-01-01 and firstName le 1970-01-01")}`);
+    });
+    
+    it("should handle lessThan and lessThanEqualTo datetime types", () => {
+        const query = baseQuery.filter((p, { and }) => and(p.firstName.$lessThan("1970-01-01", ODataType.DateTime), p.firstName.$lessThanOrEqualTo("1970-01-01", ODataType.DateTime)));
+        expect(query.provider.buildQuery(query.expression)).to.be.eql(`${endpoint}?$filter=${encodeURIComponent("firstName lt 1970-01-01T00:00:00.000Z and firstName le 1970-01-01T00:00:00.000Z")}`);
     });
 
     it("should handle null comparisons", () => {
