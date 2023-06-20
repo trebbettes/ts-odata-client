@@ -35,25 +35,22 @@ export class GetResult<T> {
 
     constructor(response: ODataResponse) {
         this.response = response;
+        this.value = this.response as unknown as T;
     }
 
     response: ODataResponse;
 
-    getValue(): T {
-        return this.response as unknown as T;
-    }
-
+    value: T;
 }
 
 export class GetManyResult<T, U> {
     
     constructor(response: ODataQueryResponse<U>) {
         this.response = response;
+        this.values = this.response.value as unknown as T[];
     }
     
     response: ODataQueryResponse<U>;
 
-    getValues(): T[] {
-        return this.response.value as unknown as T[];
-    }
+    values: T[];
 }

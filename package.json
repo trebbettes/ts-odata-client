@@ -1,6 +1,6 @@
 {
   "name": "tsrx-ts-odata-client",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "OData TypeScript Client",
   "main": "/index.js",
   "types": "/index.d.ts",
@@ -19,12 +19,12 @@
     "odata",
     "typescript"
   ],
-  "author": "Brian Ball",
+  "author": "Tom Rebbettes & Brian Ball",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cbrianball/ts-odata-client/issues"
+    "url": "https://github.com/trebbettes/ts-odata-client/issues"
   },
-  "homepage": "https://github.com/cbrianball/ts-odata-client#readme",
+  "homepage": "https://github.com/trebbettes/ts-odata-client",
   "devDependencies": {
     "@types/chai": "4.2.21",
     "@types/mocha": "^9.0.0",
