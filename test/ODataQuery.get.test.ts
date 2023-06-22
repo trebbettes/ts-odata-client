@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ODataQuery } from "../src";
+import { ODataQuery, ODataType } from "../src";
 import { MockFetch } from "./mock-fetch";
 
 describe("ODataQuery", () => {
@@ -29,6 +29,13 @@ describe("ODataQuery", () => {
         const lastRequest = currentFetch.lastRequest!;
         const url = typeof lastRequest === "string" ? lastRequest : lastRequest.url;
         expect(url).to.be.eql(endpoint + `(123)`);
+    });
+    
+    it("should produce base URL with key and no query2", () => {
+        baseQuery.getAsync('51782544-7681-40ea-9930-b6a018b77af4', ODataType.Guid);
+        const lastRequest = currentFetch.lastRequest!;
+        const url = typeof lastRequest === "string" ? lastRequest : lastRequest.url;
+        expect(url).to.be.eql(endpoint + `(51782544-7681-40ea-9930-b6a018b77af4)`);
     });
 
     it("should produce base URL with $value and no query", () => {

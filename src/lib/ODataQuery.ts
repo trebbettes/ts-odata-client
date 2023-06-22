@@ -12,6 +12,8 @@ import { createProxiedEntity, resolveQuery, ReplaceDateWithString, ProjectorType
 import { EntityProxy, PropertyProxy, propertyPath, proxyProperties } from "./ProxyTypes";
 import { FieldsFor } from "./FieldsForType";
 import type { JsonPrimitiveValueTypes } from "./JsonPrimitiveTypes";
+import { Literal } from "./Literal";
+import { ODataType } from "./ODataType";
 
 /**
  * Represents a query against an OData source.
@@ -124,7 +126,8 @@ export class ODataQuery<T, U = ExcludeProperties<T, any[]>> {
      * Returns a single record with the provided key value. Some functions (such as top, skip, filter, etc.) are ignored when this function is invoked.
      * @param key
      */
-    public async getAsync(key: any) {
+    public async getAsync(key: any, literalType?: ODataType) {
+        if (literalType) key = new Literal(key, literalType);
         const expression = new Expression(ExpressionOperator.GetByKey, [key], this.expression);
         // return await this.provider.executeQueryAsync<ODataResponse & ReplaceDateWithString<U>>(expression);
         const result = await this.provider.executeQueryAsync<ODataResponse & ReplaceDateWithString<U>>(expression);
