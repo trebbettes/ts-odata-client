@@ -31,7 +31,7 @@ describe("ODataQuery", () => {
         expect(url).to.be.eql(endpoint + `(123)`);
     });
     
-    it("should produce base URL with key and no query2", () => {
+    it("should produce base URL with key when using GuidLiteral", () => {
         baseQuery.getAsync('51782544-7681-40ea-9930-b6a018b77af4', ODataType.Guid);
         const lastRequest = currentFetch.lastRequest!;
         const url = typeof lastRequest === "string" ? lastRequest : lastRequest.url;
